@@ -10,6 +10,10 @@ a {
   text-decoration: none;
 }
 
+.list-group-item {
+  padding-left: 0;
+}
+
 /* Navbar */
 .nav-link {
   display: flex;
@@ -29,4 +33,19 @@ a {
 
 .rating i {
   color: #febf00;
+}
+
+/* Product */
+.product-stock,
+.product-qty-cart {
+  display: flex;
+  gap: 5px;
+}
+
+.product-qty-cart {
+  gap: 15px;
+}
+
+.product-qty-cart .form-select {
+  width: auto;
 }

@@ -7,7 +7,7 @@ import ProductScreen from './screens/ProductScreen';
 
 const App = () => {
   return (
-    <>
+    <div className='app'>
       <Header />
       <main className='py-4'>
         <Container>
@@ -18,7 +18,7 @@ const App = () => {
         </Container>
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

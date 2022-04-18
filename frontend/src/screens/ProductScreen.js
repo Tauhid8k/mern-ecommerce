@@ -1,79 +1,96 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Image, ListGroup } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
+import { productDetailActions } from '../redux/product/productDetailSlice';
 import Rating from '../components/Rating';
+import Loader from '../components/Loader';
+import axios from 'axios';
 
 const ProductScreen = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState({});
+  const dispatch = useDispatch();
+  const { loading, product, error } = useSelector(
+    (state) => state.productDetail
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const { data } = await axios.get(`/api/products/${id}`);
-      setProduct(data);
+      try {
+        const { data } = await axios.get(`/api/products/${id}`);
+        dispatch(productDetailActions.getProduct(data));
+      } catch (error) {
+        dispatch(productDetailActions.error(error.message));
+      }
     };
     fetchProduct();
-  }, [id]);
+  }, [id, dispatch]);
 
   return (
     <div className='product'>
-      <Link to='/' className='btn btn-dark my-3'>
+      <button className='btn btn-dark my-3' onClick={() => navigate(-1)}>
         Go Back
-      </Link>
+      </button>
 
-      <Row className='g-4'>
-        <Col md={6}>
-          <Image src={product.image} alt={product.name} fluid />
-        </Col>
-        <Col md={6}>
-          <ListGroup variant='flush'>
-            <ListGroup.Item>
-              <h2 className='mb-3'>{product.name}</h2>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Rating
-                value={product.rating}
-                text={`${product.numReviews} reviews`}
-              />
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <span className='fs-3 fw-bold'>Price: ${product.price}</span>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <span className='product-stock fs-4 fw-bold'>
-                Stock:
-                <span
-                  className={`${
-                    product.countInStock > 0 ? 'text-dark' : 'text-danger'
-                  }`}
-                >
-                  {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <h5 className='text-danger text-center'>{error}</h5>
+      ) : (
+        <Row className='g-4'>
+          <Col md={6}>
+            <Image src={product.image} alt={product.name} fluid />
+          </Col>
+          <Col md={6}>
+            <ListGroup variant='flush'>
+              <ListGroup.Item>
+                <h2 className='mb-3'>{product.name}</h2>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Rating
+                  value={product.rating}
+                  text={`${product.numReviews} reviews`}
+                />
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <span className='fs-3 fw-bold'>Price: ${product.price}</span>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <span className='product-stock fs-4 fw-bold'>
+                  Stock:
+                  <span
+                    className={`${
+                      product.countInStock > 0 ? 'text-dark' : 'text-danger'
+                    }`}
+                  >
+                    {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                  </span>
                 </span>
-              </span>
-            </ListGroup.Item>
-            <div
-              className={`product-qty-cart mt-4 ${
-                product.countInStock === 0 ? 'd-none' : 'd-flex'
-              }`}
-            >
-              <select name='' className='form-select border-secondary'>
-                <option value=''>1</option>
-                <option value=''>2</option>
-              </select>
-              <button className='btn btn-dark' type='button'>
-                Add To Cart
-              </button>
-            </div>
-            <div>
-              <p className='fs-4 my-3'>
-                <span className='fw-bold'>Description: </span>
-                {product.description}
-              </p>
-            </div>
-          </ListGroup>
-        </Col>
-      </Row>
+              </ListGroup.Item>
+              <div
+                className={`product-qty-cart mt-4 ${
+                  product.countInStock === 0 ? 'd-none' : 'd-flex'
+                }`}
+              >
+                <select name='' className='form-select border-secondary'>
+                  <option value=''>1</option>
+                  <option value=''>2</option>
+                </select>
+                <button className='btn btn-dark' type='button'>
+                  Add To Cart
+                </button>
+              </div>
+              <div>
+                <p className='fs-4 my-3'>
+                  <span className='fw-bold'>Description: </span>
+                  {product.description}
+                </p>
+              </div>
+            </ListGroup>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };

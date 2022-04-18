@@ -1,15 +1,14 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col, Row, Spinner } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
+import Loader from '../components/Loader';
 import Product from '../components/Product';
 import axios from 'axios';
-import { productActions } from '../redux/productSlice';
+import { productActions } from '../redux/product/productSlice';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const { loading, products, error } = useSelector((state) => state.product);
-
-  console.log(error);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,7 +16,7 @@ const HomeScreen = () => {
         const { data } = await axios.get('/api/products');
         dispatch(productActions.getAllProducts(data));
       } catch (error) {
-        dispatch(productActions.error(error.message));
+        dispatch(productActions.error('Something went wrong!'));
       }
     };
 
@@ -31,9 +30,9 @@ const HomeScreen = () => {
       <h1>Latest Products</h1>
       <hr />
       {loading ? (
-        <h3>Loading...</h3>
+        <Loader />
       ) : error ? (
-        <h3>{error}</h3>
+        <h5 className='text-danger text-center'>{error}</h5>
       ) : (
         <Row>
           {products.map((product) => (

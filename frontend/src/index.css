@@ -46,7 +46,8 @@ a {
   color: #febf00;
 }
 
-/* Product */
+/* Products */
+
 .product-stock,
 .product-qty-cart {
   display: flex;

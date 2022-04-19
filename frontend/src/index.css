@@ -26,7 +26,21 @@ a {
 }
 
 /* Navbar */
+.navbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.navbar-nav {
+  gap: 20px;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
 .nav-link {
+  color: white !important;
   display: flex;
   gap: 5px;
   align-items: center;
@@ -34,6 +48,10 @@ a {
 
 .nav-link i {
   line-height: 1.5;
+}
+
+header .nav-link {
+  font-size: 1.15rem;
 }
 
 /* Product Rating */
@@ -60,4 +78,20 @@ a {
 
 .product-qty-cart .form-select {
   width: auto;
+}
+
+/* Cart */
+
+.add-to-cart-icon {
+  cursor: pointer;
+  color: #444;
+}
+.add-to-cart-icon:active {
+  color: rgb(31, 155, 207);
+}
+
+.empty-cart {
+  padding: 10px;
+  border: 1px dashed #ddd;
+  text-align: center;
 }

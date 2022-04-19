@@ -9,11 +9,12 @@ import axios from 'axios';
 
 const ProductScreen = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const { loading, product, error } = useSelector(
     (state) => state.productDetail
   );
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -74,8 +75,11 @@ const ProductScreen = () => {
                 }`}
               >
                 <select name='' className='form-select border-secondary'>
-                  <option value=''>1</option>
-                  <option value=''>2</option>
+                  {[...Array(product.countInStock).keys()].map((x) => (
+                    <option key={x + 1} value={x + 1}>
+                      {x + 1}
+                    </option>
+                  ))}
                 </select>
                 <button className='btn btn-dark' type='button'>
                   Add To Cart

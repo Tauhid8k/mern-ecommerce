@@ -13,7 +13,9 @@ const Product = ({ product }) => {
       cartActions.addToCart({
         id: product._id,
         name: product.name,
+        image: product.image,
         price: product.price,
+        countInStock: product.countInStock,
       })
     );
     toast.info('Added to Cart');

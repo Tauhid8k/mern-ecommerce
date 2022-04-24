@@ -5,13 +5,12 @@ const cartSlice = createSlice({
   initialState: {
     itemsList: [],
     totalQuantity: 0,
-    showCart: false,
   },
   reducers: {
     addToCart(state, action) {
       const newItem = action.payload;
 
-      // check if the item is already in cart (so only incrate quantity)
+      // check if the item is already in cart (so only increase quantity)
       const existingItem = state.itemsList.find(
         (item) => item.id === newItem.id
       );
@@ -23,16 +22,33 @@ const cartSlice = createSlice({
         state.itemsList.push({
           id: newItem.id,
           name: newItem.name,
+          image: newItem.image,
           price: newItem.price,
-          quantity: 1,
-          totalPrice: newItem.price,
+          countInStock: newItem.countInStock,
+          quantity: newItem.quantity ? newItem.quantity : 1,
+          totalPrice: newItem.quantity
+            ? newItem.price * newItem.quantity
+            : newItem.price,
         });
+        state.totalQuantity++;
       }
-      state.totalQuantity++;
     },
-    removeFromCart() {},
-    setShowCart(state, action) {
-      state.showCart = action.payload;
+    removeFromCart(state, action) {
+      const id = action.payload;
+      const existingItem = state.itemsList.find((item) => item.id === id);
+      if (existingItem.quantity === 1) {
+        state.itemsList = state.itemsList.filter((item) => item.id !== id);
+        state.totalQuantity--;
+      } else {
+        existingItem.quantity--;
+        existingItem.totalPrice -= existingItem.price;
+      }
+    },
+    quantitySelectUpdate(state, action) {
+      const { id, selectQuantity } = action.payload;
+      const existingItem = state.itemsList.find((item) => item.id === id);
+      existingItem.quantity = selectQuantity;
+      existingItem.totalPrice = existingItem.price * existingItem.quantity;
     },
   },
 });
